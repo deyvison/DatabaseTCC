@@ -20,7 +20,7 @@ public class DBHelper extends SQLiteOpenHelper {
             ");";
 
     private static String TABLE_EASY = "CREATE TABLE easy("+
-            "nome TEXT PRIMARY KEY,"+
+            "nome TEXT,"+
             "nomeContexto TEXT,"+
             "pathImagem TEXT,"+
             "isDefault TEXT,"+
@@ -29,7 +29,7 @@ public class DBHelper extends SQLiteOpenHelper {
             ");";
 
     private static String TABLE_MEDIUM = "CREATE TABLE medium("+
-            "nome TEXT PRIMARY KEY,"+
+            "nome TEXT,"+
             "nomeContexto TEXT,"+
             "pathImagem TEXT,"+
             "isDefault TEXT,"+
@@ -38,7 +38,7 @@ public class DBHelper extends SQLiteOpenHelper {
             ");";
 
     private static String TABLE_HARD = "CREATE TABLE hard("+
-            "nome TEXT PRIMARY KEY,"+
+            "nome TEXT,"+
             "nomeContexto TEXT,"+
             "pathImagem TEXT,"+
             "isDefault TEXT,"+

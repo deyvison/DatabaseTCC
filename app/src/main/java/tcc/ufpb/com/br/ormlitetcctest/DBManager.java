@@ -79,7 +79,7 @@ public class DBManager {
     }
 
 
-    public void setContext(String nome, Contexto contexto) {
+    public void setContexto(String nome, Contexto contexto) {
         SQLiteDatabase database = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
 
@@ -106,16 +106,15 @@ public class DBManager {
     }
 
 
-    public ArrayList<Palavra> selectPalavraFacil(String foreignKey){
+    public ArrayList<Palavra> selectPalavraFacil(String foreignKey){ // retorna todas as palavras fáceis de um contexto
         SQLiteDatabase database = dbHelper.getWritableDatabase();
 
-        String query = "select easy.nome, easy.nomeContexto, easy.pathImagem, easy.isDefault from contexto,easy where contexto.nome = easy.nomeContexto";
+        // pega todos os registros do banco
+        String query = "select easy.nome, easy.nomeContexto, easy.pathImagem, easy.isDefault " +
+                "from contexto,easy " +
+                "where contexto.nome = easy.nomeContexto";
 
         Cursor cursor = database.rawQuery(query,null);
-
-
-
-        Log.i("lol", "size of cursor ="+ cursor.getCount());
 
         ArrayList<Palavra> palavras = null;
         if(cursor != null && cursor.moveToFirst()){
@@ -124,12 +123,35 @@ public class DBManager {
             do{
 
                 Palavra p = new Palavra(cursor.getString(0),cursor.getString(2),Boolean.parseBoolean(cursor.getString(3)));
-                palavras.add(p);
+                if(cursor.getString(1).equals(foreignKey)) // verifica se o foreign key são iguais
+                    palavras.add(p);
             }while (cursor.moveToNext());
         }
         return palavras;
 
 
+    }
+
+    public Palavra selectPalavraEasyByName(String foreignKey, String name){ // seleciona a palavra pelo nome
+
+        ArrayList<Palavra> retorno = selectPalavraFacil(foreignKey);
+
+        for(Palavra p : retorno){
+            if(p.getNome().equals(name))
+                return p;
+        }
+        return null;
+
+    }
+
+    public void deletePalavraEasy(String foreignkey, String name){ // deleta uma palavra de determinado contexto
+        SQLiteDatabase database = dbHelper.getWritableDatabase();
+        database.delete("easy", "nomeContexto=? and nome=?", new String[]{foreignkey,name});
+    }
+
+    public void setPalavraEasy(String foreignkey, String nome, Palavra p){
+        deletePalavraEasy(foreignkey,nome);
+        insertPalavraFacil(foreignkey,p);
     }
 
 }
